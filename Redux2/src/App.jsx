@@ -1,13 +1,20 @@
-// src/App.js
+// src/App.jsx
 import React from 'react';
-import Dashboard from './components/Dashboard';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import Dashboard from './pages/Dashboard';
+import './App.css';
 
-const App = () => {
-    return (
-        <div className="App">
-            <Dashboard />
-        </div>
-    );
-};
+function App() {
+  return (
+    <div className="app-container">
+      <Sidebar />
+      <div className="main-content">
+        <Header />
+        <Dashboard />
+      </div>
+    </div>
+  );
+}
 
 export default App;
