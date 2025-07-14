@@ -1,7 +1,7 @@
 import './Dashboard.css';
 // import TodoList from '../components/TodoList';
 import { useSelector } from 'react-redux';
-import TodoList from '../components/TodoList';
+// import TodoList from '../components/TodoList';
 import ChartBox from '../components/ChartBox';
 import '../components/ChartBox.css';
 const Dashboard = () => {

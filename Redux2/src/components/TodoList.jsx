@@ -45,7 +45,7 @@
 // export default TodoList;
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchTodos, addTodo, deleteTodo } from './todoSlice';
+import { fetchTodos, addTodo, deleteTodo } from '../redux/todoSlice';
 
 const TodoList = () => {
   const dispatch = useDispatch();
@@ -81,3 +81,4 @@ const TodoList = () => {
     </>
   );
 };
+export default TodoList;
