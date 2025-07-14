@@ -62,7 +62,7 @@ const Dashboard = () => {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Num.</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Due Date</th>
                     <th>Progress</th>
