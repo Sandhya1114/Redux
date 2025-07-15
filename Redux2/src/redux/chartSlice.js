@@ -1,25 +1,46 @@
 // src/redux/chartSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+export const fetchChartData = createAsyncThunk(
+  'charts/fetchChartData',
+  async () => {
+    const response = await fetch('/api/chart-data');
+    
+     if (!response.ok) {
+      throw new Error('Failed to fetch chart data');
+    }
+
+    const data = await response.json();
+    return data;
+  }
+);
 
 const chartSlice = createSlice({
   name: 'charts',
   initialState: {
-    salesData: [
-       { name: 'Jan', visits: 4000, sales: 2400 },
-      { name: 'Feb', visits: 3000, sales: 1398 },
-      { name: 'Mar', visits: 2000, sales: 9800 },
-      { name: 'Apr', visits: 2780, sales: 3908 },
-      { name: 'May', visits: 1890, sales: 4800 },
-      { name: 'Jun', visits: 2390, sales: 3800 },
-    ],
-    trafficData: [
-      { name: 'Search Engines ', value: 300 },
-      { name: ' Direct Click ', value: 300 },
-      { name: ' Bookmarks Click ', value: 400 },
-      
-    ]
+    salesData: [],
+    trafficData: [],
+    loading: false,
+    error: null
   },
-  reducers: {}
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchChartData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchChartData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.salesData = action.payload.salesData;
+        state.trafficData = action.payload.trafficData;
+      })
+      .addCase(fetchChartData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  }
 });
 
+// ✅ THIS LINE IS MANDATORY
 export default chartSlice.reducer;

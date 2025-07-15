@@ -1,56 +1,28 @@
 // src/redux/projectSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const initialState = {
-  projects: [
-    {
-      id: 1,
-      name: 'Herman Beck',
-      dueDate: 'May 15, 2015',
-      progress: 25,
-      status: 'success'
-    },
-    {
-      id: 2,
-      name: 'Messsy Adam',
-      dueDate: 'Jul 01, 2015',
-      progress: 75,
-      status: 'danger'
-    },
-    {
-      id: 3,
-      name: 'John Richards',
-      dueDate: 'Apr 12, 2015',
-      progress: 90,
-      status: 'warning'
-    },
-    {
-      id: 4,
-      name: 'Peter Meggik',
-      dueDate: 'May 15, 2015',
-      progress: 50,
-      status: 'primary'
-    },
-    {
-      id: 5,
-      name: 'Edward',
-      dueDate: 'May 03, 2015',
-      progress: 35,
-      status: 'danger'
-    },
-    {
-      id: 6,
-      name: 'Ronald',
-      dueDate: 'Jun 05, 2015',
-      progress: 65,
-      status: 'info'
+export const fetchProjectData = createAsyncThunk(
+  'projects/fetchProjectData',
+  async () => {
+    const response = await fetch('/api/project-data');
+
+    if (!response.ok) {
+      throw new Error('failed to fetch project data');
     }
-  ]
-};
+
+    const data = await response.json();
+    console.log("Fetched project data:", data);
+    return data;
+  }
+);
 
 const projectSlice = createSlice({
   name: 'projects',
-  initialState,
+  initialState: {
+    projects: [],
+    loading: false,
+    error: null
+  },
   reducers: {
     addProject: (state, action) => {
       state.projects.push(action.payload);
@@ -59,10 +31,28 @@ const projectSlice = createSlice({
       const index = state.projects.findIndex(p => p.id === action.payload.id);
       if (index !== -1) {
         state.projects[index] = { ...state.projects[index], ...action.payload };
-      }
+      };
     }
-  }
-});
+  },
+  extraReducers: (builder) => {
+  builder
+  .addCase(fetchProjectData.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(fetchProjectData.fulfilled, (state, action) => {
+    state.loading = false;
+    state.projects = action.payload;
+  })
+  .addCase(fetchProjectData.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.error.message;
+  })
+}
+}
+
+
+);
 
 export const { addProject, updateProject } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -1,44 +1,41 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialState = [
-  {
-    id: 'WD-12345',
-    assignee: 'David Grey',
-    avatar: 'https://randomuser.me/api/portraits/men/10.jpg',
-    subject: 'Fund is not recieved',
-    status: 'DONE',
-    updated: 'Dec 5, 2017',
-  },
-  {
-    id: 'WD-12346',
-    assignee: 'Stella Johnson',
-    avatar: 'https://randomuser.me/api/portraits/women/10.jpg',
-    subject: 'High loading time',
-    status: 'PROGRESS',
-    updated: 'Dec 12, 2017',
-  },
-  {
-    id: 'WD-12347',
-    assignee: 'Marina Michel',
-    avatar: 'https://randomuser.me/api/portraits/women/20.jpg',
-    subject: 'Website down for one week',
-    status: 'ON HOLD',
-    updated: 'Dec 16, 2017',
-  },
-  {
-    id: 'WD-12348',
-    assignee: 'John Doe',
-    avatar: 'https://randomuser.me/api/portraits/men/15.jpg',
-    subject: 'Loosing control on server',
-    status: 'REJECTED',
-    updated: 'Dec 3, 2017',
-  },
-];
+export const fetchTickets = createAsyncThunk('tickets/fetchtickets',
+  async () => {
+    const response = await fetch('api/tickets');
+    if(!response.ok){
+      throw new Error('failed to fetch tickets')
+    }
+    const data = await response.json();
+    return data;
+  }
+)
 
 const ticketSlice = createSlice({
   name: 'tickets',
-  initialState,
+  initialState: {
+    tickets: [],
+    loading: false,
+    error: null,
+  },
+
   reducers: {},
-});
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTickets.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTickets.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tickets = action.payload;
+      })
+      .addCase(fetchTickets.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  }
+})
 
 export default ticketSlice.reducer;

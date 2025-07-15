@@ -7,9 +7,46 @@
   border-bottom: 1px solid #ddd;
 }
 
+.header-container {
+  margin: auto;
+  width: 95%;
+  display: flex;
+  justify-content:space-between;
+  padding-bottom: 15px;
+}
+.btn{
+  display: flex;
+  gap: 30px;
+}
+
 .header h1 {
   font-size: 24px;
   margin: 0;
+}
+
+.header-search {
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  background: none;
+  padding: 10px;
+  margin-top: 15px;
+  width: 35vw;
+}
+
+.notification-btn {
+  border: 1px solid lightgray;
+   border-radius:20px;
+  background: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+}
+
+.user-btn {
+  border: 1px solid lightgray;
+   border-radius:20px;
+  background: none;
+  padding: 10px 20px;
+  margin-top: 15px;
 }
 
 .user-info {
